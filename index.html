@@ -1,0 +1,222 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fun Light Game</title>
+  <style>
+    body {
+      background-color: #ffc107;
+      text-align: center;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      color: #333;
+    }
+
+    #container {
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+    }
+
+    h1 {
+      font-size: 36px;
+      color: #ff5733;
+      text-shadow: 2px 2px 2px #ff5733;
+      margin-bottom: 20px;
+    }
+
+    .traffic-lights {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .traffic-light-button {
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .button-red {
+      background-color: #ff5733;
+    }
+
+    .button-yellow {
+      background-color: #f1c40f;
+    }
+
+    .button-green {
+      background-color: #2ecc71;
+    }
+
+    .button-off {
+      background-color: #333;
+    }
+
+    .button-red:hover,
+    .button-yellow:hover,
+    .button-green:hover,
+    .button-off:hover {
+      transform: scale(1.05);
+      background-color: #333;
+    }
+
+    /* CSS for background music and sound effects */
+
+    /* Add a background music player */
+    .music-player {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+
+    /* Play button */
+    .music-player .play-button {
+      background-color: #ff5733;
+      border-radius: 50%;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Pause button */
+    .music-player .pause-button {
+      background-color: #ccc;
+      border-radius: 50%;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Volume button */
+    .music-player .volume-button {
+      background-color: #ccc;
+      border-radius: 50%;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Sound effect */
+    .sound-effect {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      z-index: 1;
+      width: 100px;
+      height: 100px;
+      background-color: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    /* Animation for traffic lights */
+    .traffic-lights .button {
+      animation: change-color 1s infinite;
+    }
+
+    @keyframes change-color {
+      from {
+        background-color: #ff5733;
+      }
+      to {
+        background-color: #2ecc71;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <h1>Light Game</h1>
+    <div class="traffic-lights">
+      <button class="traffic-light-button button-red" onclick="setTrafficLightStatus('RED')">RED</button>
+      <button class="traffic-light-button button-yellow" onclick="setTrafficLightStatus('YELLOW')">YELLOW</button>
+      <button class="traffic-light-button button-green" onclick="setTrafficLightStatus('GREEN')">GREEN</button>
+    </div>
+    <button class="traffic-light-button button-off" onclick="setTrafficLightStatus('OFF')">OFF</button>
+  </div>
+
+  <!-- Add the following HTML code just before the closing </body> tag -->
+<div class="music-player">
+    <audio id="background-music" src="Music.mp3" preload="auto" loop></audio>
+    <button class="play-button" id="play-button" onclick="toggleMusic()">
+      <img src="music-icon.png" alt="Music Icon">
+    </button>
+    <button class="volume-button" id="volume-button" onclick="toggleMute()">
+      <img src="volume-icon.png" alt="Volume Icon">
+    </button>
+  </div>
+  
+  <!-- Add the following JavaScript code inside <script> tags in your <head> section -->
+  <script>
+    const backgroundMusic = document.getElementById('background-music');
+    const playButton = document.getElementById('play-button');
+    const volumeButton = document.getElementById('volume-button');
+  
+    let isPlaying = false;
+    let isMuted = false;
+  
+    function toggleMusic() {
+      if (isPlaying) {
+        backgroundMusic.pause();
+        playButton.classList.remove('pause-button');
+        playButton.classList.add('play-button');
+      } else {
+        backgroundMusic.play();
+        playButton.classList.remove('play-button');
+        playButton.classList.add('pause-button');
+      }
+      isPlaying = !isPlaying;
+    }
+  
+    function toggleMute() {
+      if (isMuted) {
+        backgroundMusic.volume = 1;
+        volumeButton.classList.remove('unmute-button');
+        volumeButton.classList.add('mute-button');
+      } else {
+        backgroundMusic.volume = 0;
+        volumeButton.classList.remove('mute-button');
+        volumeButton.classList.add('unmute-button');
+      }
+      isMuted = !isMuted;
+    }
+  </script>  
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+
+  <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAGIH8RrpaGO7FlYyIlciKleuT2ZreC30k",
+        authDomain: "ledcontrol-e86c5.firebaseapp.com",
+        databaseURL: "https://ledcontrol-e86c5-default-rtdb.firebaseio.com",
+        projectId: "ledcontrol-e86c5",
+        storageBucket: "ledcontrol-e86c5.appspot.com",
+        messagingSenderId: "336775608480",
+        appId: "1:336775608480:web:f820031b0115c2c3def1c5"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    function setTrafficLightStatus(status) {
+      firebase.database().ref("status/").set({
+        status: status
+      });
+    }
+  </script>
+</body>
+
+</html>
