@@ -2,8 +2,8 @@
 #include <WiFiNINA.h>
 #include <Firebase_Arduino_WiFiNINA.h>
 
-#define FIREBASE_HOST "ledcontrol-e86c5-default-rtdb.firebaseio.com"
-#define FIREBASE_AUTH "rMeiBsm3uINRpbQvTKygaS8hsJ3zYRdsuADwzhnt"
+#define FIREBASE_HOST "https://web-to-device-default-rtdb.asia-southeast1.firebasedatabase.app/"
+#define FIREBASE_AUTH "wRi63ckmjSp1wqiHouujbrqFyupZS479WNZ9s3dW"
 
 #define WIFI_SSID "Kartik"
 #define WIFI_PASSWORD "87654321"
