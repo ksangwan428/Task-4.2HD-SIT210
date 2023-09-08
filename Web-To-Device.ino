@@ -2,21 +2,30 @@
 #include <WiFiNINA.h>
 #include <Firebase_Arduino_WiFiNINA.h>
 
+// Firebase configuration
 #define FIREBASE_HOST "https://web-to-device-default-rtdb.asia-southeast1.firebasedatabase.app/"
 #define FIREBASE_AUTH "wRi63ckmjSp1wqiHouujbrqFyupZS479WNZ9s3dW"
 
+// WiFi credentials
 #define WIFI_SSID "Kartik"
 #define WIFI_PASSWORD "87654321"
 
-FirebaseData firebaseData;
+// Firebase data path
 const String firebasePath = "/status/status";
+
+// LED pins
+const int RED_LED_PIN = 13;
+const int YELLOW_LED_PIN = 3;
+const int GREEN_LED_PIN = 4;
+
+FirebaseData firebaseData;
 
 void setup()
 {
   Serial.begin(9600);
-  pinMode(13, OUTPUT);
-  pinMode(3, OUTPUT);
-  pinMode(4, OUTPUT);
+  pinMode(RED_LED_PIN, OUTPUT);
+  pinMode(YELLOW_LED_PIN, OUTPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
 
   // Connect to Wi-Fi
   connectToWiFi();
@@ -36,26 +45,26 @@ void loop()
   if (status == "RED")
   {
     controlLEDs(HIGH, LOW, LOW);
-    Serial.println("RED LED ON");
+    Serial.println("Turning the RED LED ON");
   }
   else if (status == "YELLOW")
   {
     controlLEDs(LOW, HIGH, LOW);
-    Serial.println("YELLOW LED ON");
+    Serial.println("Turning the YELLOW LED ON");
   }
   else if (status == "GREEN")
   {
     controlLEDs(LOW, LOW, HIGH);
-    Serial.println("GREEN LED ON");
+    Serial.println("Turning the GREEN LED ON");
   }
   else if (status == "OFF")
   {
     controlLEDs(LOW, LOW, LOW);
-    Serial.println("OFF");
+    Serial.println("Turning all LEDs OFF");
   }
   else
   {
-    Serial.println("Unknown status: " + status);
+    Serial.println("Unknown status received from Firebase: " + status);
   }
 
   delay(1000); // Adjust the delay as needed
@@ -86,11 +95,11 @@ void setFirebaseStatus(const String &status)
 {
   if (Firebase.setString(firebaseData, firebasePath, status))
   {
-    Serial.println("Firebase status set to: " + status);
+    Serial.println("Firebase status updated to: " + status);
   }
   else
   {
-    Serial.println("Error setting Firebase status: " + firebaseData.errorReason());
+    Serial.println("Failed to update Firebase status. Error: " + firebaseData.errorReason());
   }
 }
 
@@ -102,14 +111,14 @@ String getFirebaseStatus()
   }
   else
   {
-    Serial.println("Error getting Firebase status: " + firebaseData.errorReason());
+    Serial.println("Failed to retrieve Firebase status. Error: " + firebaseData.errorReason());
     return "ERROR";
   }
 }
 
 void controlLEDs(int red, int yellow, int green)
 {
-  digitalWrite(13, red);
-  digitalWrite(3, yellow);
-  digitalWrite(4, green);
+  digitalWrite(RED_LED_PIN, red);
+  digitalWrite(YELLOW_LED_PIN, yellow);
+  digitalWrite(GREEN_LED_PIN, green);
 }
